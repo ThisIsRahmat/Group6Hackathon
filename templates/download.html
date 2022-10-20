@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form method="POST" action="{{ url_for('download_video') }}"> # Linking to a Python function we'll create next
+        <h3>{{ url.title }}</h5> # The video title 
+        <select name="itag" aria-label="Default select example">
+            {% for i in url.streams.filter(progressive=True) %}
+                <option value="{{ i.itag }}"> {{ i.resolution }} </option> # Iterating through the qualities of the video.
+            {% endfor %}
+        </select>
+        <button type="submit">Download</button>
+    </form>
+{% endblock content %}
