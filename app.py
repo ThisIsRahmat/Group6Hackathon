@@ -1,18 +1,23 @@
 
+from pyexpat import model
 from flask import Flask, request, url_for, session, render_template, redirect, send_file
 from pytube import YouTube
 from io import BytesIO
 import banana_dev as banana
 import pixellib
 from pixellib.instance import instance_segmentation
+import os
 
-#Save it as a secure variable later
-api_key={YOUR API KEY}
+# #Save it as a secure variable later
+# api_key={YOUR API KEY}
+api_key = os.getenv("CARROT_API_KEY")
 
 #Defining the model to run 
-model_key="carrot"
+# model_key="carrot"
+model_key = os.getenv("CARROT_MODEL_KEY")
+
 model_parameters = {
-                    "text":"is this a makeup item?", #text for QA / Similarity
+                    "text":"List all the makeup items in this image", #text for QA / Similarity
                     "imageURL":video, #image for the model
                     "similarity":False, #whether to return text-image similarity
                     "maxLength":100, #max length of the generation
@@ -21,8 +26,21 @@ model_parameters = {
 
 #To generate captions, only send the image in model_parameters
 
-out = banana.run(api_key, model_key, model_parameters)
-print(out)
+products = banana.run(api_key, model_key, model_parameters)
+print(products)
+
+# A seperate function to search for the function in Amazon/Other Shopping site
+def search_product(products):
+    #Works through the list of products outputed by the prompt and then it searches for them on 
+    #Amazon and returns the list 
+    # for item in products:
+
+
+
+    #     return 
+
+
+
 
 
 app = Flask(__name__)
@@ -67,9 +85,6 @@ segment_video.process_video(
     frames_per_second=30,
     output_video_name="videos/instance_segmentation_output.mp4",
 )
-
-        
-
 
 
         video.stream_to_buffer(buffer)
