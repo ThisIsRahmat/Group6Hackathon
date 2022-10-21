@@ -4,47 +4,22 @@ from flask import Flask, request, url_for, session, render_template, redirect, s
 from pytube import YouTube
 from io import BytesIO
 import banana_dev as banana
-import pixellib
-from pixellib.instance import instance_segmentation
+# import pixellib
+# from pixellib.instance import instance_segmentation
 import os
+import whisper
 
-# #Save it as a secure variable later
-# api_key={YOUR API KEY}
-api_key = os.getenv("CARROT_API_KEY")
+# model = whisper.load_model("base")
 
-#Defining the model to run 
-# model_key="carrot"
-model_key = os.getenv("CARROT_MODEL_KEY")
-
-model_parameters = {
-                    "text":"List all the makeup items in this image", #text for QA / Similarity
-                    "imageURL":video, #image for the model
-                    "similarity":False, #whether to return text-image similarity
-                    "maxLength":100, #max length of the generation
-                    "minLength":30 #min length of the generation
-                    }
-
-#To generate captions, only send the image in model_parameters
-
-products = banana.run(api_key, model_key, model_parameters)
-print(products)
-
-# A seperate function to search for the function in Amazon/Other Shopping site
-def search_product(products):
-    #Works through the list of products outputed by the prompt and then it searches for them on 
-    #Amazon and returns the list 
-    # for item in products:
+# audio = whisper.load_audio("audio.mp3")
 
 
-
-    #     return 
-
-
-
-
+# result = model.transcribe("audio.mp3")
+# print(result["text"])
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "your_secret_key"
+
 @app.route("/", methods = ["GET", "POST"])
 def home():
     if request.method == "POST":
@@ -57,6 +32,22 @@ def home():
         return render_template("download.html", url = url)
     return render_template("index.html")
 
+
+
+def get_audio():
+  yt = YouTube(session['link'])
+  video = yt.streams.filter(only_audio=True).first()
+  out_file=video.download(output_path=".")
+  base, ext = os.path.splitext(out_file)
+  new_file = base+'.mp3'
+  os.rename(out_file, new_file)
+  a = new_file
+  return a
+
+def get_text(url):
+  result = model.transcribe(get_audio(url))
+  return result['text']
+
 @app.route("/download", methods = ["GET", "POST"])
 def download_video():
     if request.method == "POST":
@@ -66,34 +57,18 @@ def download_video():
         global video
         video = url.streams.get_by_itag(itag) # Store the video into a variable
 
-        #segment the video
-        segment_video = instance_segmentation()
-        segment_video.load_model
-
-        # Setting the file path for the input video
-input_video_file_path = "videos/test_video.mp4"
-# Creating an instance_segmentation object
-segment_video = instance_segmentation()
-# Loading the Mask R-CNN model trained on the COCO dataset
-segment_video.load_model("mask_rcnn_coco.h5")
-# Processing the video
-segment_video.process_video(
-    input_video_file_path, 
-    show_bboxes=True, 
-    extract_segmented_objects=True, 
-    save_extracted_objects=False,
-    frames_per_second=30,
-    output_video_name="videos/instance_segmentation_output.mp4",
-)
-
-
+        #get the video audio 
+        video_audio = video.streams.filter(only_audio=True).first()
+        out_file=video.download(output_path=".")
+        base, ext = os.path.splitext(out_file)
+        new_file = base+'.mp3'
+        os.rename(out_file, new_file)
+        a = new_file
         video.stream_to_buffer(buffer)
         buffer.seek(0)
         return send_file(buffer, as_attachment=True, download_name="Video - YT2Video.mp4", mimetype="video/mp4")
     return redirect(url_for("home"))
 
-
-@app.route(/)
 
 if __name__ == "__main__":
     app.run(debug=True)
