@@ -1,0 +1,170 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Lora:wght@600&display=swap");
+
+:root {
+  --background: #fbecef;
+  --primary: #c3405a;
+  --text: #370000;
+  --white: #ffffff;
+  --container-shadow: 2px 2px 5px rgba(112, 17, 36, 0.1),
+    2px 4px 20px rgba(112, 17, 36, 0.15);
+  --body-font: "IBM Plex Mono", monospace;
+  --header-font: "Lora", serif;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+p {
+  font-size: 1em;
+  font-family: var(--body-font);
+}
+
+h1 {
+  margin-bottom: 40px;
+  font-size: 1.8em;
+  font-family: var(--header-font);
+}
+
+h2 {
+  font-size: 1.6em;
+  font-family: var(--header-font);
+}
+
+form {
+  background-color: var(--white);
+  border-radius: 4px;
+  box-shadow: var(--container-shadow);
+  padding: 12px 16px;
+  width: 600px;
+  max-width: 90vw;
+}
+
+.video-url-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.video-url-form:focus-within {
+  outline: 2px solid var(--primary);
+}
+
+input {
+  border-width: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
+  flex: 1;
+  font-family: var(--body-font);
+}
+
+input:focus-visible {
+  outline: none;
+}
+
+button {
+  background-color: var(--text);
+  border: 1px solid var(--text);
+  color: var(--white);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--body-font);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 150ms ease-in;
+}
+
+button::after {
+  display: block;
+  content: "";
+  width: 1em;
+  height: 1em;
+  background-image: url("data:image/svg+xml,%3Csvg width='13' height='12' viewBox='0 0 13 12' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.8125 2.625L8.1875 6L4.8125 9.375' stroke='white' stroke-miterlimit='10' stroke-linecap='square'/%3E%3C/svg%3E%0A");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button[type="submit"] {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+button:not([type="submit"]):hover {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+button[type="submit"]:hover {
+  background-color: var(--text);
+  border: 1px solid var(--text);
+}
+
+.product {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--container-shadow);
+  padding: 16px;
+  width: 680px;
+  max-width: 90vw;
+}
+
+.product + .product {
+  margin-top: 32px;
+}
+
+.product-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 16px;
+  background-color: var(--background);
+  overflow: hidden;
+}
+
+.product-img img {
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-info h2 {
+  margin: 0 0 4px 0;
+}
+
+.product-info p {
+  margin: 0;
+}
+
+select {
+  margin-bottom: 24px;
+}

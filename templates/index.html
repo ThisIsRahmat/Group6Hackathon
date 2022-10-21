@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1> Shop directly from a Youtube Video</h1>
-<br>
-<form method="POST">
-    <input type="text" placeholder="Enter the YouTube video URL" aria-label="default input example" name="url">
-    <button type="submit">Shop</button>
+<h1>Shop directly from a Youtube Video</h1>
+<form method="POST" class="video-url-form">
+  <input
+    type="text"
+    placeholder="Paste YouTube link here"
+    aria-label="YouTube URL"
+    name="url"
+  />
+  <button type="submit">Shop video</button>
 </form>
 {% endblock content %}
