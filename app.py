@@ -16,6 +16,8 @@ import whisper
 
 # result = model.transcribe("audio.mp3")
 # print(result["text"])
+makeup_data = pd.read_csv("products(1).csv")
+brand_products = list(makeup_data['brand_product'].unique())
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "your_secret_key"
@@ -47,6 +49,13 @@ def get_audio():
 def get_text(url):
   result = model.transcribe(get_audio(url))
   return result['text']
+
+
+def match_product(string entity):
+  matches = {x for x in brand_products if x in entity} #entity is the object been parsed
+  return list(matches) 
+
+
 
 @app.route("/download", methods = ["GET", "POST"])
 def download_video():
