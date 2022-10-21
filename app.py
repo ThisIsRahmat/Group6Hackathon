@@ -1,14 +1,14 @@
 
 from pyexpat import model
+from unittest import result
 from flask import Flask, request, url_for, session, render_template, redirect, send_file
 from pytube import YouTube
 from io import BytesIO
-import banana_dev as banana
 import pandas as pd
-# import pixellib
-# from pixellib.instance import instance_segmentation
 import os
 import whisper
+import openai
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # model = whisper.load_model("base")
 
@@ -21,7 +21,7 @@ makeup_data = pd.read_csv("products(1).csv")
 brand_products = list(makeup_data['brand_product'].unique())
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "your_secret_key"
+# app.config['SECRET_KEY'] = "your_secret_key"
 
 @app.route("/", methods = ["GET", "POST"])
 def home():
@@ -34,7 +34,6 @@ def home():
             return render_template("error.html") # If the URL is invalid, we display an error page.
         return render_template("download.html", url = url)
     return render_template("index.html")
-
 
 
 def get_audio():
@@ -52,11 +51,25 @@ def get_text(url):
   return result['text']
 
 
-def match_product(string entity):
+# ai_prompt ="Extract cosmetic brands from this text"
+
+def gpt3(ai_prompt):
+    entity = openai.Completion.create(
+        input=result
+        model="text-davinci-002",
+        prompt="Extract cosmetic brands from this text"
+        temperature=0.3,
+        max_tokens=60,
+        top_p=1,
+        frequency_penalty=0.8,
+        presence_penalty=0
+        )
+    
+    return entity
+
+def match_product(entity):
   matches = {x for x in brand_products if x in entity} #entity is the object been parsed
   return list(matches) 
-
-
 
 @app.route("/download", methods = ["GET", "POST"])
 def download_video():
